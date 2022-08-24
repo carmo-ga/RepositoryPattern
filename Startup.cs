@@ -15,20 +15,16 @@ namespace RepositoryPattern
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SQLiteContext>(option => option.UseSqlite(Configuration.GetConnectionString("sqlite")));
+            services.AddDbContext<SQLiteContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlite")));
             
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             
             services.AddControllers();
+            services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title="RepositoryPattern", Version="v1" });
-            });
-
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = (int)System.Net.HttpStatusCode.TemporaryRedirect;
-                options.HttpsPort = 5001;
             });
         }
 
@@ -37,10 +33,9 @@ namespace RepositoryPattern
             if(env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RepositoryPattern v1"));
             }
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RepositoryPattern v1"));
 
             app.UseHttpsRedirection();
             app.UseRouting();

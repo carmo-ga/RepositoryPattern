@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RepositoryPattern.Domain;
+using RepositoryPattern.Domain.Entities;
 
 namespace RepositoryPattern.Data
 {
@@ -9,7 +9,9 @@ namespace RepositoryPattern.Data
         {
         }
 
+        public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,24 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
-using RepositoryPattern.Domain;
+using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.Repositories;
 
-namespace RepositoryPattern.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class ProductController : ControllerBase
+namespace RepositoryPattern.Controllers
 {
-    private readonly IProductRepository _productRepository;
-    public ProductController(IProductRepository productRepository)
+    [ApiController]
+    [Route("[controller]")]
+    public class ProductController : ControllerBase
     {
-        _productRepository = productRepository;
-    }
+        private readonly IProductRepository _productRepository;
+        public ProductController(IProductRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
 
-    [HttpGet("{Id:Guid}")]
-    public Product GetById(Guid Id)
-    {
-        var product = _productRepository.GetProductById(Id);
-        return product;
+        [HttpGet("{Id:Guid}")]
+        public Product GetById(Guid Id)
+        {
+            var product = _productRepository.GetProductById(Id);
+            return product;
+        }
     }
 }
 // public class WeatherForecastController : ControllerBase

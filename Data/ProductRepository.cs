@@ -1,5 +1,6 @@
 using RepositoryPattern.Data;
 using Microsoft.EntityFrameworkCore;
+using RepositoryPattern.Domain.Entities;
 
 namespace RepositoryPattern.Domain.Repositories
 {
@@ -11,9 +12,15 @@ namespace RepositoryPattern.Domain.Repositories
         {
             _sqliteContext = context;
         }
+
+        public IEnumerable<Product> GetAllProducts(int offsetPage, UserRole role)
+        {
+            return _sqliteContext.Products.ToList();
+        }
+
         public Product GetProductById(Guid Id)
         {
-            return _sqliteContext.Products.FirstOrDefault(a => a.Id.Equals(Id));
+            return _sqliteContext.Products.FirstOrDefault(p => p.Id.Equals(Id));
         }
     }
 }

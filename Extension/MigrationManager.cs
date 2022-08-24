@@ -16,7 +16,7 @@ namespace RepositoryPattern.Extension
                 catch (System.Exception ex)
                 {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "Error");
+                    logger.LogError(ex, "Error on configuring database.");
                 }
             }
             return host;
