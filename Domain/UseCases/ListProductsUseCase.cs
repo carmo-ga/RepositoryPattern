@@ -8,12 +8,12 @@ namespace RepositoryPattern.Domain.UseCases
         public IProductRepository _productRepository { get; }
         public ListProductsUseCase(IProductRepository productRepository)
         {
-            
+            _productRepository = productRepository;
         }
 
-        public IEnumerable<Product> ListAllProducts(int offsetPage, UserRole role)
-        {
-            return this._productRepository.GetAllProducts(offsetPage, role);
-        }
+        // public IEnumerable<Product> ListAllProducts(int offsetPage, UserRole role)
+        // {
+        //     return this._productRepository.GetAllProducts(offsetPage, role);
+        // }
     }
 }

@@ -14,11 +14,11 @@ namespace RepositoryPattern.Controllers
             _productRepository = productRepository;
         }
 
-        [HttpGet("{Id:Guid}")]
-        public Product GetById(Guid Id)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetById(int Id)
         {
-            var product = _productRepository.GetProductById(Id);
-            return product;
+            var product = await _productRepository.GetProductById(Id);
+            return product != null ? Ok(product) : NotFound("Produto não encontrado");
         }
     }
 }
