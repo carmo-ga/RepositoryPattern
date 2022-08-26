@@ -2,17 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using RepositoryPattern.Domain.DTO;
 using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.Repositories;
+using RepositoryPattern.Domain.UseCases;
 
-namespace RepositoryPattern.Controllers
+namespace RepositoryPattern.Controllers.Teste
 {
     [ApiController]
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
-        public ProductController(IProductRepository productRepository)
+        private readonly ListProductsUseCase _productUseCases;
+        public ProductController(ListProductsUseCase productUseCases)
         {
-            _productRepository = productRepository;
+            _productUseCases = productUseCases;
         }
 
         [Route("/{id}")]
@@ -20,14 +21,14 @@ namespace RepositoryPattern.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById(int Id)
         {
-            var product = await _productRepository.GetProductByIdAsync(Id);
+            var product = await _productUseCases.GetProductById(Id);
             return product != null ? Ok(product) : NotFound("Produto não encontrado");
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
-            var products = await _productRepository.GetAllProductsAsync();
+            var products = await _productUseCases.ListAllProducts();
             return products != null ? Ok(products) : NotFound("Produto não encontrado");
         }
 
@@ -41,7 +42,7 @@ namespace RepositoryPattern.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProdutcsUser(UserRole role)
         {
-            var products = await _productRepository.GetAllProductsAsync();
+            var products = await _productUseCases.ListAllProducts();
             List<ProductsUserDTO> productsUser = new List<ProductsUserDTO>();
 
             foreach(var p in products)

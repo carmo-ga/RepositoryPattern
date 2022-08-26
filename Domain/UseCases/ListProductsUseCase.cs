@@ -5,15 +5,30 @@ namespace RepositoryPattern.Domain.UseCases
 {
     public class ListProductsUseCase
     {
-        public IProductRepository _productRepository { get; }
+        private IProductRepository _productRepository { get; }
         public ListProductsUseCase(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        // public IEnumerable<Product> ListAllProducts(int offsetPage, UserRole role)
-        // {
-        //     return this._productRepository.GetAllProducts(offsetPage, role);
-        // }
+        public async Task<Product> GetProductById(int Id)
+        {
+            return await _productRepository.GetProductByIdAsync(Id);
+        }
+
+        public async Task<IEnumerable<Product>> ListAllProducts()
+        {
+            return await _productRepository.GetAllProductsAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductByCategory()
+        {
+            return await _productRepository.GetProductByCategoryAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsUser(UserRole role)
+        {
+            return await _productRepository.GetProductsUserAsync(role);
+        }
     }
 }

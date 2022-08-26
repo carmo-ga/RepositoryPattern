@@ -4,6 +4,6 @@ namespace RepositoryPattern.Domain.Entities
     {
         public int Id { get; set; }
         public string CategoryTitle { get; set; }
-        public ICollection<Product> Produto { get; set; }
+        public List<Product> ProdutcsList { get; set; }
     }
 }

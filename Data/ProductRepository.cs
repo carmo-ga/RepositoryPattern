@@ -13,15 +13,30 @@ namespace RepositoryPattern.Domain.Repositories
             _sqliteContext = context;
         }
 
-        // public IEnumerable<Product> GetAllProducts(int offsetPage, UserRole role)
-        // {
-        //     return _sqliteContext.Products.ToList();
-        // }
-
-        public async Task<Product> GetProductById(int Id)
+        public async Task<Product> GetProductByIdAsync(int Id)
         {
             return await _sqliteContext.Products.Where(p => p.Id.Equals(Id)).FirstOrDefaultAsync();
             //return await _sqliteContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(Id));
+        }
+
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            return await _sqliteContext.Products.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductByCategoryAsync()
+        {
+            return await _sqliteContext.Products.ToListAsync();
+                //.Where(p => p.CategoryId == Id).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsUserAsync(UserRole role)
+        {
+            if(role == UserRole.USER)
+            {
+                return await _sqliteContext.Products.ToListAsync();
+            }
+            return null;
         }
     }
 }
