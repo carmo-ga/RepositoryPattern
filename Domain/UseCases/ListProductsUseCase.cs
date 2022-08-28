@@ -1,3 +1,5 @@
+using System.Collections;
+using RepositoryPattern.Domain.DTO;
 using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.Repositories;
 
@@ -11,24 +13,23 @@ namespace RepositoryPattern.Domain.UseCases
             _productRepository = productRepository;
         }
 
-        public async Task<Product> GetProductById(int Id)
+        public async Task<IEnumerable<Product>> Execute(UserRole userRole, int offset, string? category)
         {
-            return await _productRepository.GetProductByIdAsync(Id);
-        }
-
-        public async Task<IEnumerable<Product>> ListAllProducts()
-        {
-            return await _productRepository.GetAllProductsAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetProductByCategory()
-        {
-            return await _productRepository.GetProductByCategoryAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetProductsUser(UserRole role)
-        {
-            return await _productRepository.GetProductsUserAsync(role);
+            //Task<IEnumerable<Product>> products = _productRepository.ListProductsAsync(offset, category);
+            var products = await _productRepository.ListProductsAsync(offset, category);
+            
+            if(userRole.Equals(UserRole.USER))
+            {
+                List<ProductsUserDTO> productsUser = new List<ProductsUserDTO>();
+                foreach(var p in products)
+                {
+                    productsUser.Add(new ProductsUserDTO { Id = p.Id, Title = p.Title, Description = p.Description, Image = p.Image, PublicationDate = p.PublicationDate, CategoryId = p.CategoryId});
+                }
+                //IEnumerable<ProductsUserDTO> enProdUser = productsUser;
+                return (IEnumerable<Product>)productsUser;
+                //return (IEnumerable<Product>)productsUser;
+            }
+            return products;
         }
     }
 }

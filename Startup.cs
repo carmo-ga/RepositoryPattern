@@ -1,7 +1,9 @@
 using RepositoryPattern.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using RepositoryPattern.Domain.UseCases;
 using RepositoryPattern.Domain.Repositories;
+using System.Text.Json.Serialization;
 
 namespace RepositoryPattern
 {
@@ -17,10 +19,12 @@ namespace RepositoryPattern
         {
             services.AddDbContext<SQLiteContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlite")));
             
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddScoped<ListProductsUseCase>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             
             services.AddControllers();
+            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
