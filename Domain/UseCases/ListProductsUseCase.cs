@@ -1,10 +1,14 @@
-using System.Collections;
-using RepositoryPattern.Domain.DTO;
 using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.Repositories;
 
 namespace RepositoryPattern.Domain.UseCases
 {
+    public enum Order
+    {
+        ALPHABETICAL,
+        PUBLICATIONDATE
+    }
+
     public class ListProductsUseCase
     {
         private IProductRepository _productRepository { get; }
@@ -13,23 +17,30 @@ namespace RepositoryPattern.Domain.UseCases
             _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Product>> Execute(UserRole userRole, int offset, string? category)
+        public async Task<IEnumerable<Product>> Execute(UserRole userRole, int offset, Order? orderBy, string? category)
         {
-            //Task<IEnumerable<Product>> products = _productRepository.ListProductsAsync(offset, category);
-            var products = await _productRepository.ListProductsAsync(offset, category);
-            
+            IEnumerable<Product> products = await _productRepository.ListProductsAsync(offset, category);
+            IList<Product> resultado = new List<Product>();
             if(userRole.Equals(UserRole.USER))
             {
-                List<ProductsUserDTO> productsUser = new List<ProductsUserDTO>();
                 foreach(var p in products)
                 {
-                    productsUser.Add(new ProductsUserDTO { Id = p.Id, Title = p.Title, Description = p.Description, Image = p.Image, PublicationDate = p.PublicationDate, CategoryId = p.CategoryId});
+                    resultado.Add(new Product {  Id = p.Id, Title = p.Title, Description = p.Description, Image = p.Image, PublicationDate = p.PublicationDate, CategoryId = p.CategoryId }); 
                 }
-                //IEnumerable<ProductsUserDTO> enProdUser = productsUser;
-                return (IEnumerable<Product>)productsUser;
-                //return (IEnumerable<Product>)productsUser;
+                products = resultado.AsEnumerable();
             }
-            return products;
+
+            IEnumerable<Product> orderedProducts = new List<Product>();
+            if(Order.ALPHABETICAL.Equals(orderBy))
+            {
+                orderedProducts = products.OrderBy(product => product.Title);
+            }
+            if(Order.PUBLICATIONDATE.Equals(orderBy))
+            {
+                orderedProducts = products.OrderByDescending(product => product.PublicationDate);
+            }
+
+            return orderedProducts;
         }
     }
 }

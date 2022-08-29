@@ -16,9 +16,15 @@ namespace RepositoryPattern.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().HasKey(a => a.Id);
-            modelBuilder.Entity<Product>().HasKey(a => a.Id);
-            modelBuilder.Entity<Category>().HasKey(a => a.Id);
+
+            modelBuilder.Entity<User>().HasKey(k => k.Id);
+            modelBuilder.Entity<Product>().HasKey(k => k.Id);
+            modelBuilder.Entity<Category>().HasKey(k => k.Id);
+            
+            //.WithMany(p => p.ProdutcsList).HasForeignKey<int>(fk => fk.CategoryId);
+
+                // .HasOne(c => c.Category)
+                // .HasForeignKey(fk => fk.CategoryId);
         }
     }
 }

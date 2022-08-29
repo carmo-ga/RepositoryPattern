@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using RepositoryPattern.Domain.DTO;
 using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.UseCases;
 
@@ -10,9 +9,9 @@ namespace RepositoryPattern.Controllers
     public class ProductController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> ListProdutcs([FromServices]ListProductsUseCase useCase, UserRole userRole, int offset, string? category)
+        public async Task<IActionResult> ListProdutcs([FromServices]ListProductsUseCase useCase, UserRole userRole, int offset, Order? orderBy, string? category)
         {
-            var products = await useCase.Execute(userRole, offset, category);
+            var products = await useCase.Execute(userRole, offset, orderBy, category);
             return Ok(products);
         }
     }
