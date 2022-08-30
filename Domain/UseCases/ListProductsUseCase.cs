@@ -17,9 +17,9 @@ namespace RepositoryPattern.Domain.UseCases
             _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Product>> Execute(UserRole userRole, int offset, Order? orderBy, string? category)
+        public async Task<IEnumerable<Product>> Execute(UserRole userRole, Order orderBy, int page, string? category)
         {
-            IEnumerable<Product> products = await _productRepository.ListProductsAsync(offset, category);
+            IEnumerable<Product> products = await _productRepository.ListProductsAsync(orderBy, page, category);
             IList<Product> resultado = new List<Product>();
             if(userRole.Equals(UserRole.USER))
             {
@@ -29,18 +29,18 @@ namespace RepositoryPattern.Domain.UseCases
                 }
                 products = resultado.AsEnumerable();
             }
+            return products;
+            // IEnumerable<Product> orderedProducts = new List<Product>();
+            // if(Order.ALPHABETICAL.Equals(orderBy))
+            // {
+            //     orderedProducts = products.OrderBy(product => product.Title);
+            // }
+            // if(Order.PUBLICATIONDATE.Equals(orderBy))
+            // {
+            //     orderedProducts = products.OrderByDescending(product => product.PublicationDate);
+            // }
 
-            IEnumerable<Product> orderedProducts = new List<Product>();
-            if(Order.ALPHABETICAL.Equals(orderBy))
-            {
-                orderedProducts = products.OrderBy(product => product.Title);
-            }
-            if(Order.PUBLICATIONDATE.Equals(orderBy))
-            {
-                orderedProducts = products.OrderByDescending(product => product.PublicationDate);
-            }
-
-            return orderedProducts;
+            // return orderedProducts;
         }
     }
 }

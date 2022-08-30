@@ -9,9 +9,15 @@ namespace RepositoryPattern.Controllers
     public class ProductController : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> ListProdutcs([FromServices]ListProductsUseCase useCase, UserRole userRole, int offset, Order? orderBy, string? category)
+        public async Task<IActionResult> ListProdutcs(
+            [FromServices]ListProductsUseCase useCase,
+            UserRole userRole,
+            Order orderBy,
+            int page = 1,
+            string? category = "")
         {
-            var products = await useCase.Execute(userRole, offset, orderBy, category);
+            if(page <= 0) page = 1;
+            var products = await useCase.Execute(userRole, orderBy, page, category);
             return Ok(products);
         }
     }

@@ -1,6 +1,7 @@
 using RepositoryPattern.Data;
 using Microsoft.EntityFrameworkCore;
 using RepositoryPattern.Domain.Entities;
+using RepositoryPattern.Domain.UseCases;
 
 namespace RepositoryPattern.Domain.Repositories
 {
@@ -13,8 +14,16 @@ namespace RepositoryPattern.Domain.Repositories
             _sqliteContext = context;
         }
 
-        public async Task<IEnumerable<Product>> ListProductsAsync(int offset, string? category)
+        public async Task<IEnumerable<Product>> ListProductsAsync(Order orderBy, int page, string? category)
         {
+            int take = 5;
+            int skip = 0;
+            if(page > 1)
+            {
+                skip = take * (page - 1);
+            }
+
+            int totalRows = await _sqliteContext.Products.CountAsync();
             IEnumerable<Product> products = new List<Product>();
 
             if(!string.IsNullOrEmpty(category))
@@ -24,13 +33,26 @@ namespace RepositoryPattern.Domain.Repositories
                 products = await _sqliteContext.Products
                     .Include(c => c.Category)
                     .Where(c => c.CategoryId == id_category)
+                    .AsNoTracking()
                     .ToListAsync();
             }
             else
             {
-                products = await _sqliteContext.Products.ToListAsync();
+                products = await _sqliteContext.Products
+                    .AsNoTracking()
+                    .ToListAsync();
             }
-            return products;
+
+            if(Order.ALPHABETICAL.Equals(orderBy))
+            {
+                products = products.OrderBy(product => product.Title);
+            }
+            if(Order.PUBLICATIONDATE.Equals(orderBy))
+            {
+                products = products.OrderByDescending(product => product.PublicationDate);
+            }
+
+            return products.Skip(skip).Take(take);;
         }
 
         // Propriedade invertida - categoria
