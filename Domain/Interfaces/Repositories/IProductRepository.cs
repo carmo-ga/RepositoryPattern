@@ -1,7 +1,7 @@
 using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.UseCases;
 
-namespace RepositoryPattern.Domain.Repositories
+namespace RepositoryPattern.Domain.Interfaces.Repositories
 {
     public interface IProductRepository
     {

@@ -1,12 +1,10 @@
-using RepositoryPattern.Data;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using RepositoryPattern.Domain.UseCases;
-using RepositoryPattern.Domain.Repositories;
 using System.Text.Json.Serialization;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using RepositoryPattern.Infrastructure;
+using RepositoryPattern.Domain.UseCases;
+using RepositoryPattern.Domain.Infrastructure.Data;
+using RepositoryPattern.Domain.Interfaces.Repositories;
 
 namespace RepositoryPattern
 {
@@ -20,7 +18,7 @@ namespace RepositoryPattern
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SQLiteContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlite")));
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlite")));
             
             services.AddScoped<LoginUserUseCase>();
             services.AddScoped<ListProductsUseCase>();
@@ -28,7 +26,7 @@ namespace RepositoryPattern
             services.AddScoped<IProductRepository, ProductRepository>();
             
             services.AddControllers();
-            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            //services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -63,26 +61,26 @@ namespace RepositoryPattern
             });
 
             // Auth
-            var key = Encoding.ASCII.GetBytes(Configuration["JWTSecret"]);
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(jwt =>
-            {
-                jwt.RequireHttpsMetadata = false;
-                jwt.SaveToken = true;
-                jwt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            // var key = Encoding.ASCII.GetBytes(Configuration["JWTSecret"]);
+            // services.AddAuthentication(options =>
+            // {
+            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            // })
+            // .AddJwtBearer(jwt =>
+            // {
+            //     jwt.RequireHttpsMetadata = false;
+            //     jwt.SaveToken = true;
+            //     jwt.TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         ValidateLifetime = true,
+            //         ValidateIssuerSigningKey = true,
+            //         IssuerSigningKey = new SymmetricSecurityKey(key),
+            //         ValidateIssuer = false,
+            //         ValidateAudience = false
+            //     };
+            // });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

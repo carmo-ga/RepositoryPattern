@@ -38,14 +38,14 @@ namespace RepositoryPattern.Controllers
             {
                 var userClaims = identity.Claims;
 
-                string role = userClaims.FirstOrDefault(r => r.Type == ClaimTypes.Role).Value;
-                UserRole userRole = (UserRole) Enum.Parse(typeof(UserRole), role);
+                //string role = userClaims.FirstOrDefault(r => r.Type == ClaimTypes.Role).Value;
+                //UserRole userRole = (UserRole) Enum.Parse(typeof(UserRole), userClaims.FirstOrDefault(r => r.Type == ClaimTypes.Role).Value);
 
                 return new User
                 {
                     UserName = userClaims.FirstOrDefault(y => y.Type == ClaimTypes.NameIdentifier)?.Value,
                     Name = userClaims.FirstOrDefault(n => n.Type == ClaimTypes.Name)?.Value,
-                    Role = userRole
+                    Role = (UserRole)Enum.Parse(typeof(UserRole), userClaims.FirstOrDefault(r => r.Type == ClaimTypes.Role).Value)
                 };
             }
             return null;

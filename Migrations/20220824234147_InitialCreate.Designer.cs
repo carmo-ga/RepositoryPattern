@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RepositoryPattern.Data;
+using RepositoryPattern.Infrastructure;
 
 #nullable disable
 
 namespace RepositoryPattern.Migrations
 {
-    [DbContext(typeof(SQLiteContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20220824234147_InitialCreate")]
     partial class InitialCreate
     {

@@ -1,5 +1,5 @@
 using RepositoryPattern.Domain.Entities;
-using RepositoryPattern.Domain.Repositories;
+using RepositoryPattern.Domain.Interfaces.Repositories;
 
 namespace RepositoryPattern.Domain.UseCases
 {

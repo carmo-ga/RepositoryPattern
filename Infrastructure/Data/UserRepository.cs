@@ -1,17 +1,18 @@
 using System;
-using RepositoryPattern.Data;
+using RepositoryPattern.Infrastructure;
 using RepositoryPattern.Domain.Entities;
+using RepositoryPattern.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace RepositoryPattern.Domain.Repositories
+namespace RepositoryPattern.Domain.Infrastructure.Data
 {
     public class UserRepository : IUserRepository
     {
-        private readonly SQLiteContext _sqliteContext;
+        private readonly DatabaseContext _dbContext;
 
-        public UserRepository(SQLiteContext context)
+        public UserRepository(DatabaseContext context)
         {
-            _sqliteContext = context;
+            _dbContext = context;
         }
 
         // public bool Login(string userName)
@@ -22,7 +23,7 @@ namespace RepositoryPattern.Domain.Repositories
         public async Task<IEnumerable<User>> ListUsersAsync()
         {
             IEnumerable<User> users = new List<User>();
-            users = await _sqliteContext.Users.AsNoTracking().ToListAsync();
+            users = await _dbContext.Users.AsNoTracking().ToListAsync();
             return users;
         }
 
@@ -30,7 +31,7 @@ namespace RepositoryPattern.Domain.Repositories
         {
             User usuario = new User();
            
-            usuario = await _sqliteContext.Users
+            usuario = await _dbContext.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.UserName == username && u.Password == password);
 

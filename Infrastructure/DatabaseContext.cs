@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RepositoryPattern.Domain.Entities;
 
-namespace RepositoryPattern.Data
+namespace RepositoryPattern.Infrastructure
 {
-    public class SQLiteContext : DbContext
+    public class DatabaseContext : DbContext
     {
-        public SQLiteContext(DbContextOptions<SQLiteContext> options) : base(options)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
         }
 

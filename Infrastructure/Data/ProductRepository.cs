@@ -1,17 +1,18 @@
-using RepositoryPattern.Data;
 using Microsoft.EntityFrameworkCore;
-using RepositoryPattern.Domain.Entities;
+using RepositoryPattern.Infrastructure;
 using RepositoryPattern.Domain.UseCases;
+using RepositoryPattern.Domain.Entities;
+using RepositoryPattern.Domain.Interfaces.Repositories;
 
-namespace RepositoryPattern.Domain.Repositories
+namespace RepositoryPattern.Domain.Infrastructure.Data
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly SQLiteContext _sqliteContext;
+        private readonly DatabaseContext _dbContext;
 
-        public ProductRepository(SQLiteContext context)
+        public ProductRepository(DatabaseContext context)
         {
-            _sqliteContext = context;
+            _dbContext = context;
         }
 
         public async Task<IEnumerable<Product>> ListProductsAsync(Order orderBy, int page, string? category)
@@ -23,14 +24,14 @@ namespace RepositoryPattern.Domain.Repositories
                 skip = take * (page - 1);
             }
 
-            int totalRows = await _sqliteContext.Products.CountAsync();
+            int totalRows = await _dbContext.Products.CountAsync();
             IEnumerable<Product> products = new List<Product>();
 
             if(!string.IsNullOrEmpty(category))
             {
                 int id_category = await FindCategoryId(category);
 
-                products = await _sqliteContext.Products
+                products = await _dbContext.Products
                     .Include(c => c.Category)
                     .Where(c => c.CategoryId == id_category)
                     .AsNoTracking()
@@ -38,7 +39,7 @@ namespace RepositoryPattern.Domain.Repositories
             }
             else
             {
-                products = await _sqliteContext.Products
+                products = await _dbContext.Products
                     .AsNoTracking()
                     .ToListAsync();
             }
@@ -65,7 +66,7 @@ namespace RepositoryPattern.Domain.Repositories
 
         protected async Task<int> FindCategoryId(string categoryTitle)
         {
-            var category = await _sqliteContext.Categories
+            var category = await _dbContext.Categories
                 .Where(c => c.CategoryTitle == categoryTitle)
                 .SingleOrDefaultAsync();
             return category.Id;

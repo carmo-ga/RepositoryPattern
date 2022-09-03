@@ -1,5 +1,5 @@
 using RepositoryPattern.Domain.Entities;
-using RepositoryPattern.Domain.Repositories;
+using RepositoryPattern.Domain.Interfaces.Repositories;
 
 namespace RepositoryPattern.Domain.UseCases
 {
@@ -10,11 +10,6 @@ namespace RepositoryPattern.Domain.UseCases
         {
             _userRepository = userRepository;
         }
-
-        // public bool LoginUser(string userName)
-        // {
-        //     return this._userRepository.Login(userName);
-        // }
 
         public async Task<IEnumerable<User>> Execute()
         {

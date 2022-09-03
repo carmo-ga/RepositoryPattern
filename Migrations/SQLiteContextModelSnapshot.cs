@@ -3,13 +3,13 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RepositoryPattern.Data;
+using RepositoryPattern.Infrastructure;
 
 #nullable disable
 
 namespace RepositoryPattern.Migrations
 {
-    [DbContext(typeof(SQLiteContext))]
+    [DbContext(typeof(DatabaseContext))]
     partial class SQLiteContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

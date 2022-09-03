@@ -1,6 +1,6 @@
 using RepositoryPattern.Domain.Entities;
 
-namespace RepositoryPattern.Domain.Repositories
+namespace RepositoryPattern.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {
