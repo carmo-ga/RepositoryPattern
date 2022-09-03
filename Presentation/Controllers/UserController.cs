@@ -18,14 +18,6 @@ namespace RepositoryPattern.Controllers
         {
             _configuration = config;
         }
-        
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> ListUsers([FromServices]LoginUserUseCase useCase)
-        {
-            var users = await useCase.Execute();
-            return Ok(users);
-        }
 
         // [HttpGet("/{usermane}/{password}")]
         [Authorize]

@@ -11,15 +11,15 @@ namespace RepositoryPattern.Domain.UseCases
 
     public class ListProductsUseCase
     {
-        private IProductRepository _productRepository { get; }
-        public ListProductsUseCase(IProductRepository productRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public ListProductsUseCase(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<Product>> Execute(UserRole userRole, Order orderBy, int page, string? category)
         {
-            IEnumerable<Product> products = await _productRepository.ListProductsAsync(orderBy, page, category);
+            IEnumerable<Product> products = await _unitOfWork.ProductRepository.ListProductsAsync(orderBy, page, category);
             IList<Product> resultado = new List<Product>();
             if(userRole.Equals(UserRole.USER))
             {
