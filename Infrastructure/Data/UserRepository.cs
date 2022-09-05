@@ -1,8 +1,7 @@
-using System;
+using Microsoft.EntityFrameworkCore;
 using RepositoryPattern.Infrastructure;
 using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryPattern.Domain.Infrastructure.Data
 {
@@ -13,18 +12,6 @@ namespace RepositoryPattern.Domain.Infrastructure.Data
         public UserRepository(DatabaseContext context)
         {
             _dbContext = context;
-        }
-
-        // public bool Login(string userName)
-        // {
-        //     throw new NotImplementedException();
-        // }
-
-        public async Task<IEnumerable<User>> ListUsersAsync()
-        {
-            IEnumerable<User> users = new List<User>();
-            users = await _dbContext.Users.AsNoTracking().ToListAsync();
-            return users;
         }
 
         public async Task<User> GetUserByIdAsync(string username, string password)

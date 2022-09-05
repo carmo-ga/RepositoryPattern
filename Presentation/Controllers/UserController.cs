@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.UseCases;
+using RepositoryPattern.Domain.DTOs.Responses;
+using RepositoryPattern.Presentation.Requests;
 
-namespace RepositoryPattern.Controllers
+namespace RepositoryPattern.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -20,22 +21,26 @@ namespace RepositoryPattern.Controllers
         }
 
         // [HttpGet("/{usermane}/{password}")]
-        [Authorize]
-        [HttpGet]
-        [Route("id")]
-        public async Task<IActionResult> GetUserById([FromServices]LoginUserUseCase useCase, string username, string password)
-        {
-            User user = await useCase.Execute(username, password);
-            return Ok(user);
-        }
+        // [Authorize]
+        // [HttpGet]
+        // [Route("id")]
+        // public async Task<IActionResult> GetUserById([FromServices]LoginUseCase useCase, string username, string password)
+        // {
+        //     User user = await useCase.Execute(username, password);
+        //     return Ok(user);
+        // }
 
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromServices]LoginUserUseCase useCase,
-            [FromBody] UserLoginData userData)
+        public async Task<IActionResult> Index(
+            [FromServices]LoginUseCase useCase,
+            [FromBody] LoginRequest userData)
         {
-            User user = await useCase.Execute(userData.UserName, userData.Password);
+            LoginResponse user = await useCase.Execute(new LoginUseCaseInput {
+                UserName = userData.UserName,
+                Password = userData.Password
+            });
 
             if(user != null)
             {
@@ -45,7 +50,7 @@ namespace RepositoryPattern.Controllers
             return NotFound("User not found.");
         }
 
-        private string GenereteToken(User user)
+        private string GenereteToken(LoginResponse user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWTSecret"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

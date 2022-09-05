@@ -1,8 +1,10 @@
+using AutoMapper;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using RepositoryPattern.Profiles;
 using RepositoryPattern.Infrastructure;
 using RepositoryPattern.Domain.UseCases;
+using RepositoryPattern.Configurations;
 using RepositoryPattern.Domain.Infrastructure.Data;
 using RepositoryPattern.Domain.Interfaces.Repositories;
 
@@ -20,12 +22,38 @@ namespace RepositoryPattern
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlite")));
             
-            services.AddScoped<LoginUserUseCase>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<LoginUseCase>();
             services.AddScoped<ListProductsUseCase>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             
+            //services.AddAutoMapper(typeof(Startup));
+            var configuration = new MapperConfiguration(cfg => 
+            {
+                cfg.AddProfile<LoginProfile>();
+                cfg.AddProfile<ProductProfile>();
+                //cfg.CreateMap<Product, ProductResponse>();
+            });
+            configuration.AssertConfigurationIsValid();
+
+            var mapper = configuration.CreateMapper();
+            services.AddSingleton(mapper);
+            
+            // var config = new MapperConfiguration(cfg => {
+            //     cfg.AddProfile<AppProfile>();
+            //     cfg.CreateMap<Source, Dest>();
+            // });
+
+            // var mapper = config.CreateMapper();
+            // // or
+            // IMapper mapper = new Mapper(config);
+            // var dest = mapper.Map<Source, Dest>(new Source());
+
+
+
             services.AddControllers();
+            services.AddAuthenticationSettings(Configuration);
             //services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
@@ -59,28 +87,6 @@ namespace RepositoryPattern
                     } 
                 });
             });
-
-            // Auth
-            // var key = Encoding.ASCII.GetBytes(Configuration["JWTSecret"]);
-            // services.AddAuthentication(options =>
-            // {
-            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            // })
-            // .AddJwtBearer(jwt =>
-            // {
-            //     jwt.RequireHttpsMetadata = false;
-            //     jwt.SaveToken = true;
-            //     jwt.TokenValidationParameters = new TokenValidationParameters
-            //     {
-            //         ValidateLifetime = true,
-            //         ValidateIssuerSigningKey = true,
-            //         IssuerSigningKey = new SymmetricSecurityKey(key),
-            //         ValidateIssuer = false,
-            //         ValidateAudience = false
-            //     };
-            // });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

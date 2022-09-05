@@ -1,10 +1,10 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryPattern.Domain.Entities;
 using RepositoryPattern.Domain.UseCases;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
-namespace RepositoryPattern.Controllers
+namespace RepositoryPattern.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

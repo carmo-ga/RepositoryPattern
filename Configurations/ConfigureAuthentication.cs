@@ -2,7 +2,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace RepositoryPattern.Controllers
+namespace RepositoryPattern.Configurations
 {
     public static class ConfigureAuthentication
     {
